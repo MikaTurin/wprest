@@ -1,0 +1,47 @@
+#!/usr/bin/env php
+<?php
+use WP\Command;
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Output\ConsoleOutput;
+
+$file = __DIR__ . '/../../../autoload.php';
+$path = __DIR__ . '/../../../../';
+
+if (file_exists($file)) {
+    require_once $file;
+}
+elseif (file_exists(__DIR__ . '/../vendor/autoload.php')) {
+    require_once __DIR__ . '/../vendor/autoload.php';
+    $path = __DIR__ . '/../';
+}
+else {
+    error('cant find vendor/autoload.php');
+}
+
+function error($errorString) { (new ConsoleOutput())->writeln('<fg=red>' . $errorString . '</fg=red>'); exit(1); }
+
+$appPath = $path .'/app/app.php';
+
+if ( ! file_exists($appPath)) {
+    error('cant find app.php');
+}
+
+$app = require_once $appPath;
+
+if ( ! $app instanceof \WP\Application) {
+    error($appPath . ' returns with a non \\WP\\Application instance');
+}
+
+$commands = [
+    new Command\Route\All($app),
+    new Command\Route\Working($app),
+    new Command\Route\Broken($app)
+];
+
+$application = new Application('wprest', '1.0');
+
+foreach ($commands as $command) {
+    $application->add($command);
+}
+
+$application->run();

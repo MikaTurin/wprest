@@ -1,0 +1,21 @@
+{
+    "name" : "wp/rest",
+    "license": "MIT",
+    "type": "library",
+    "require": {
+	    "php": ">=5.4.0",
+        "symfony/http-kernel": "~2.6",
+        "stack/builder": "^1.0",
+        "rdlowrey/auryn": "0.14.*",
+        "nikic/fast-route": "0.4.*",
+        "monolog/monolog": "~1.13",
+        "symfony/var-dumper": "~2.6",
+        "symfony/console": "~2.6"
+	},
+    "bin": ["bin/wprest"],
+    "autoload": {
+        "psr-4": {
+            "WP\\": "src"
+        }
+    }
+}
